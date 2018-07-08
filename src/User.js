@@ -1,6 +1,12 @@
 import $ from "jquery";
 import React from "react";
 import {connect} from 'react-redux';
+import {ajaxPut} from './common.js';
+
+//const User = ({users, get_users}) => {
+//    return (<div>{users[0].fullname}</div>);
+//}
+
 
 class User extends React.Component {
     componentDidMount() {
@@ -9,47 +15,30 @@ class User extends React.Component {
 
     render() {
         let fullname = '';
-        if (this.props.users.length > 0)
-            fullname = this.props.users[0].fullname;
+        if (this.props.users.length === 0)
+          return (<div>no users</div>)
 
-        return (<div>{fullname}</div>);
+        let users_list = [];
+        for (let i=0; i<this.props.users.length; i++){
+            fullname = this.props.users[i].fullname;
+            users_list.push(
+              <div>
+                <div>{fullname}</div>
+                <div>
+                    <input type="submit" value="submit" onClick={event => this.props.update_user(123)}/>
+                </div>
+                <div>{this.props.tester}</div>
+              </div>
+            )
+        }
+
+        return <div>{users_list}</div>;
     }
 }
-
-//const User = ({users, get_users}) => {
-//    return (<div>{users[0].fullname}</div>);
-//}
-
-/*
-class User extends React.Component {
-    constructor(props) {
-        super(props);
-
-/*
-        this.state = {
-            users: props.users
-        };
-* /
-    }
-
-    componentDidMount() {
-        // try to get users from the store
-        this.setState({users: store.dispatch({type: "GET_USERS"})});
-        
-    }
-
-    render() {
-        var stuff = "Nothing yet";
-        if (this.state.users)
-            stuff = "Name: " + this.state.users[0].fullname;
-
-        return (<div>{stuff}</div>);
-    }
-}
-*/
 
 const mapStateToProps = state => {
-    return { users: state.users };
+    return { users: state.users,
+             tester: state.tester };
 }
 
 const mapDispatchToProps = dispatch => {
@@ -67,6 +56,20 @@ const mapDispatchToProps = dispatch => {
                     },
                     crossDomain: true
                 }
+            );
+        },
+        update_user: (user_id) => {
+            let data = {name: "cy",
+                        fullname: "cy weisman",
+                        password: "password"}
+            ajaxPut("http://192.168.136.3:8000/users/123",
+                    data,
+                    function(data) {
+                        dispatch({type: 'UPDATE_USER', payload: data});
+                    },
+                    function(xhr, textStatus, errorThrown) {
+                        console.log("ERROR!!!!");
+                    }
             );
         }
     }
