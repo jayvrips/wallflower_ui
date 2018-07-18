@@ -13,22 +13,22 @@ import User from './User.js';
 
 function wallflowerReducer(state, action) {
     let initialState =  {
-        blah: "hello there",
-        users: [],
-        tester: ""
+        users: {}
     };
 
+    let users = null;
     switch (action.type) {
         case "INITIALIZE":
             return initialState;
 
         case "UPDATE_USERS":
-            let users = {users: action.payload};
+            users = {users: action.payload};
             return {...state, ...users};
 
         case "UPDATE_USER":
-            let tester = {tester: action.payload};
-            return {...state, ...tester};
+            users = Object.assign({}, state.users);
+            users[action.id] = action.user_data;
+            return {...state, ...{users: users}};
 
         default:
             if (state === undefined)

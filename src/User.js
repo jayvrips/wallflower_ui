@@ -14,37 +14,35 @@ class User extends React.Component {
     }
 
     render() {
-        let fullname = '';
-        if (this.props.users.length === 0)
+        if (Object.keys(this.props.users).length === 0)
           return (<div>no users</div>)
 
         let users_list = [];
-        for (let i=0; i<this.props.users.length; i++){
-            fullname = this.props.users[i].fullname;
+        for (let user in this.props.users){
             users_list.push(
               <div>
-                <div>{fullname}</div>
-                <div>
-                    <input type="submit" value="submit" onClick={event => this.props.update_user(123)}/>
-                </div>
-                <div>{this.props.tester}</div>
+                <div>{this.props.users[user].fullname}</div>
               </div>
             )
         }
 
-        return <div>{users_list}</div>;
+        return <div>
+            {users_list}
+            <div>
+                <input type="submit" value="submit" onClick={event => this.props.update_user(1)}/>
+            </div>
+          </div>;
     }
 }
 
 const mapStateToProps = state => {
-    return { users: state.users,
-             tester: state.tester };
+    return { users: state.users };
 }
 
 const mapDispatchToProps = dispatch => {
     return {
         get_users: (users) => {
-            if (users.length !== 0)
+            if (Object.keys(users).length !== 0)
                 return;
             $.ajax("http://192.168.136.3:8000/users",
                 {
@@ -59,13 +57,16 @@ const mapDispatchToProps = dispatch => {
             );
         },
         update_user: (user_id) => {
-            let data = {name: "cy",
-                        fullname: "cy weisman",
-                        password: "password"}
-            ajaxPut("http://192.168.136.3:8000/users/123",
-                    data,
-                    function(data) {
-                        dispatch({type: 'UPDATE_USER', payload: data});
+            let request_data = {name: "Ed",
+                        fullname: "Ed Jones",
+                        password: "password"};
+            ajaxPut("http://192.168.136.3:8000/users/"+ user_id,
+                    request_data,
+                    //rest call returns updated/new user
+                    //this anonymous function takes that data, and calls 
+                    //dispatch function to put in redux store
+                    function(response_data) {
+                        dispatch({type: 'UPDATE_USER', id: user_id, user_data: response_data});
                     },
                     function(xhr, textStatus, errorThrown) {
                         console.log("ERROR!!!!");
