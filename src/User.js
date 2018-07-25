@@ -1,7 +1,6 @@
-import $ from "jquery";
 import React from "react";
 import {connect} from 'react-redux';
-import {ajaxPost, ajaxPut} from './common.js';
+import {ajaxGet, ajaxPost, ajaxPut} from './common.js';
 
 //const User = ({users, get_users}) => {
 //    return (<div>{users[0].fullname}</div>);
@@ -87,15 +86,12 @@ const mapDispatchToProps = dispatch => {
         get_users: (users) => {
             if (Object.keys(users).length !== 0)
                 return;
-            $.ajax("/users",
-                {
-                    success: function(data) {
-                        dispatch({type: 'UPDATE_USERS', payload: data});
-                    },
-                    error: function(xhr, textStatus, errorThrown) {
-                        console.log("ERROR!!!!");
-                    },
-                    crossDomain: true
+            ajaxGet("/users", 
+                function(data) {
+                    dispatch({type: 'UPDATE_USERS', payload: data});
+                },
+                function(xhr, textStatus, errorThrown) {
+                    console.log("ERROR!!!!");
                 }
             );
         },
