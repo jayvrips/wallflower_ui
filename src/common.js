@@ -1,7 +1,7 @@
 import $ from "jquery";
 
 function ajaxCall(method, path, data, success, error) {
-    let url = "http://192.168.136.3:8000" + path
+    let url = "http://localhost:8000" + path
 
     let params =
     {
@@ -30,6 +30,17 @@ export function ajaxPost(path, data, success, error) {
 
 export function ajaxPut(path, data, success, error) {
     ajaxCall("PUT", path, data, success, error);
-}        
+}
 
-
+export function fetchUsers(dispatch, users) {
+    if (Object.keys(users).length !== 0)
+        return;
+    ajaxGet("/users",
+        function(data) {
+            dispatch({type: 'UPDATE_USERS', payload: data});
+        },
+        function(xhr, textStatus, errorThrown) {
+            console.log("ERROR!!!!");
+        }
+    );
+  }

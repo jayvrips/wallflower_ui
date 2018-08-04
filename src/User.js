@@ -40,12 +40,12 @@ class User extends React.Component {
             </div>
 
             <div>
-            <label htmlFor="fullname">Full Name: </label>     
+            <label htmlFor="fullname">Full Name: </label>
             <input type="text" id="fullname" ref={this.user.fullname}/>
             </div>
 
             <div>
-            <label htmlFor="password">Password: </label>     
+            <label htmlFor="password">Password: </label>
             <input type="text" id="password" ref={this.user.password}/>
             </div>
 
@@ -104,7 +104,7 @@ const mapDispatchToProps = dispatch => {
             ajaxPost("/user",
                     request_data,
                     //rest call returns updated/new user
-                    //this anonymous function takes that data, and calls 
+                    //this anonymous function takes that data, and calls
                     //dispatch function to put in redux store
                     function(response_data) {
                         dispatch({type: 'UPDATE_USER', id: response_data['id'], user_data: response_data});
@@ -121,7 +121,7 @@ const mapDispatchToProps = dispatch => {
             ajaxPut("/users/"+ user_id,
                     request_data,
                     //rest call returns updated/new user
-                    //this anonymous function takes that data, and calls 
+                    //this anonymous function takes that data, and calls
                     //dispatch function to put in redux store
                     function(response_data) {
                         dispatch({type: 'UPDATE_USER', id: user_id, user_data: response_data});
@@ -136,4 +136,3 @@ const mapDispatchToProps = dispatch => {
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(User);
-

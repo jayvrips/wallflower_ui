@@ -8,6 +8,7 @@ import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 //import App from './App.js';
 import User from './User.js';
+import Profile from './Profile.js';
 
 
 
@@ -43,10 +44,12 @@ const store = createStore(wallflowerReducer);
 ReactDOM.render(
                 <Provider store={store}>
                   <Router >
-                    <Route exact path="/" component={User} />
+                    <div>
+                      <Route exact path="/" component={User} />
+                      <Route path='/profile/:id' component={Profile} />
+                    </div>
                   </Router>
                 </Provider>,
                 document.getElementById('root'));
 
 registerServiceWorker();
-
