@@ -14,7 +14,8 @@ import Profile from './Profile.js';
 
 function wallflowerReducer(state, action) {
     let initialState =  {
-        users: {}
+        users: {},
+        profiles: {}
     };
 
     let users = null;
@@ -30,6 +31,14 @@ function wallflowerReducer(state, action) {
             users = Object.assign({}, state.users);
             users[action.id] = action.user_data;
             return {...state, ...{users: users}};
+
+        case "UPDATE_PROFILE":
+        //state is the store
+            let profiles = Object.assign({}, state.profiles);
+        //action is the stuff we passed in dispatch, so action.id is profile_id
+            profiles[action.id] = action.profile_data;
+            return {...state, ...{profiles: profiles}}
+
 
         default:
             if (state === undefined)

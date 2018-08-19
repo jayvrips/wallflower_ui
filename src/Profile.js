@@ -1,7 +1,8 @@
 import React from "react";
 import {connect} from 'react-redux';
 import {fetchUsers} from './common.js';
-import {dropdown} from './Widgets.js'
+import {dropdown} from './Widgets.js';
+import {ajaxPut} from './common.js';
 
 const height_dict = {
   "under_5": "Peter Dinklage",
@@ -60,10 +61,10 @@ class Profile extends React.Component {
           </div>
 
           <div>
-          <label htmlFor="income">Income: </label>
+          <label htmlFor="networth">networth: </label>
           {networth_dropdown}
           </div>
-          <button onClick={()=> {self.props.updateProfile(self.state)}}>Submit</button>
+          <button onClick={()=> {self.props.updateProfile(self.state, user.profile_id)}}>Submit</button>
         </div>
       );
     }
@@ -78,28 +79,27 @@ const mapDispatchToProps = dispatch => {
     get_users: (users) => {fetchUsers(dispatch, users)},
 
 
-    updateProfile: (profile) => {}
+    updateProfile: (profile, profile_id) => {update_profile(dispatch, profile, profile_id)}
   };
 }
 
-function update_profile(dispatch, profile) => {
+function update_profile(dispatch, profile, profile_id){
     let request_data = {
-        name: user.name.current.value,
-        fullname: user.fullname.current.value,
-        password: user.password.current.value
+        height: profile.height_id,
+        networth: profile.networth_id
     }
-    ajaxPost("/user",
+    ajaxPut("/profile/" + profile_id,
             request_data,
             //rest call returns updated/new user
             //this anonymous function takes that data, and calls
             //dispatch function to put in redux store
             function(response_data) {
-                dispatch({type: 'UPDATE_USER', id: response_data['id'], user_data: response_data});
+                dispatch({type: 'UPDATE_PROFILE', id: response_data['id'], profile_data: response_data});
             },
             function(xhr, textStatus, errorThrown) {
                 console.log("ERROR!!!!");
             }
     );
-},
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
