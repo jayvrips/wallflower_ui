@@ -1,6 +1,6 @@
 import React from "react";
 import {connect} from 'react-redux';
-import {fetchUsers} from './common.js';
+import {fetchProfiles} from './common.js';
 import {dropdown} from './Widgets.js';
 import {ajaxPut} from './common.js';
 
@@ -25,13 +25,13 @@ class Profile extends React.Component {
       super(props);
 
       this.state= {
-        height_id: "average_5",
-        networth_id: "average"
+        height_id: null,
+        networth_id: null
       }
     }
 
     componentDidMount() {
-        this.props.get_users(this.props.users);
+        this.props.get_profiles(this.props.profiles);
     }
 
     onHeightChange(height_id){
@@ -44,17 +44,32 @@ class Profile extends React.Component {
 
     render(){
       let self = this;
-      if (Object.keys(this.props.users).length === 0)
+      if (Object.keys(this.props.profiles).length === 0)
         return <div/>;
 
-      const user = this.props.users[this.props.match.params.id];
+      const profile = this.props.profiles[this.props.match.params.id];
 
-      let height_dropdown = dropdown(height_dict, this.state.height_id, this.onHeightChange.bind(this));
-      let networth_dropdown = dropdown(networth_dict, this.state.networth_id, this.onNetworthChange.bind(this));
+      let height_id = this.state.height_id;
+      let networth_id = this.state.networth_id;
+
+      if (!height_id)
+        height_id = profile.height_id
+
+      if (!height_id)
+        height_id = 'medium_5'
+
+      if (!networth_id)
+        networth_id = profile.networth_id
+
+      if (!networth_id)
+        networth_id = 'one_percent'
+
+      let height_dropdown = dropdown(height_dict, height_id, this.onHeightChange.bind(this));
+      let networth_dropdown = dropdown(networth_dict, networth_id, this.onNetworthChange.bind(this));
 
       return(
         <div className="col_container">
-          <div><p>{user.name}</p></div>
+          <div><p>{profile.id}</p></div>
           <div>
           <label htmlFor="height">Height: </label>
           {height_dropdown}
@@ -64,19 +79,19 @@ class Profile extends React.Component {
           <label htmlFor="networth">networth: </label>
           {networth_dropdown}
           </div>
-          <button onClick={()=> {self.props.updateProfile(self.state, user.profile_id)}}>Submit</button>
+          <button onClick={()=> {self.props.updateProfile(self.state, profile.id)}}>Submit</button>
         </div>
       );
     }
 }
 
 const mapStateToProps = state => {
-   return { users: state.users };
+   return { profiles: state.profiles };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    get_users: (users) => {fetchUsers(dispatch, users)},
+    get_profiles: (profiles) => {fetchProfiles(dispatch, profiles)},
 
 
     updateProfile: (profile, profile_id) => {update_profile(dispatch, profile, profile_id)}

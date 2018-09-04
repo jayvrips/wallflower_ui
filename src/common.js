@@ -44,3 +44,16 @@ export function fetchUsers(dispatch, users) {
         }
     );
   }
+
+export function fetchProfiles(dispatch, profiles) {
+      if (Object.keys(profiles).length !== 0)
+          return;
+      ajaxGet("/profiles",
+          function(data) {
+              dispatch({type: 'UPDATE_PROFILES', payload: data});
+          },
+          function(xhr, textStatus, errorThrown) {
+              console.log("ERROR!!!!");
+          }
+      );
+  }

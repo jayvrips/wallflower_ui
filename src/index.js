@@ -9,6 +9,7 @@ import registerServiceWorker from './registerServiceWorker';
 //import App from './App.js';
 import User from './User.js';
 import Profile from './Profile.js';
+import Profiles from './Profiles.js'
 
 
 
@@ -19,6 +20,7 @@ function wallflowerReducer(state, action) {
     };
 
     let users = null;
+    let profiles = null;
     switch (action.type) {
         case "INITIALIZE":
             return initialState;
@@ -32,9 +34,13 @@ function wallflowerReducer(state, action) {
             users[action.id] = action.user_data;
             return {...state, ...{users: users}};
 
+        case "UPDATE_PROFILES":
+            profiles = {profiles: action.payload};
+            return {...state, ...profiles};
+
         case "UPDATE_PROFILE":
         //state is the store
-            let profiles = Object.assign({}, state.profiles);
+            profiles = Object.assign({}, state.profiles);
         //action is the stuff we passed in dispatch, so action.id is profile_id
             profiles[action.id] = action.profile_data;
             return {...state, ...{profiles: profiles}}
@@ -55,6 +61,7 @@ ReactDOM.render(
                   <Router >
                     <div>
                       <Route exact path="/" component={User} />
+                      <Route exact path="/profiles" component={Profiles} />
                       <Route path='/profile/:id' component={Profile} />
                     </div>
                   </Router>
