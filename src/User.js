@@ -1,12 +1,16 @@
 import React from "react";
 import {connect} from 'react-redux';
 import {ajaxGet, ajaxPost, ajaxPut} from './common.js';
+import {Link} from "react-router-dom";
 
 //const User = ({users, get_users}) => {
 //    return (<div>{users[0].fullname}</div>);
 //}
 
 
+//RENAME TO USER SETTINGS//
+//KEEP FORM BUT MOVE LIST TO PROFILES COMPNENT AND HAVE IT USE PROFILES props
+//ON SUBMIT OF FORM, REDIRECT TO PROFILE PAGE
 class User extends React.Component {
     constructor(props) {
        super(props);
@@ -22,7 +26,14 @@ class User extends React.Component {
     onFieldChange(field, value) {
        let new_state = {};
        new_state[field] = value;
-       this.setState(new_state);
+       this.setState(new_state);list = (<div>no profiles</div>)
+
+        else{
+            for (let profile in this.props.profiles){
+                profiles_list.push(
+                  <div>
+                    <Link to={'/profile/' + this.props.profiles[profile].id}>{this.props.profiles[profile].height}</Link>
+                  </div>
     }
 */
 
@@ -64,7 +75,7 @@ class User extends React.Component {
             for (let user in this.props.users){
                 users_list.push(
                   <div>
-                    <div>{this.props.users[user].fullname}</div>
+                    <Link to={'/profile/' + this.props.users[user].profile_id}>{this.props.users[user].fullname}</Link>
                   </div>
                 )
             }
@@ -86,7 +97,7 @@ const mapDispatchToProps = dispatch => {
         get_users: (users) => {
             if (Object.keys(users).length !== 0)
                 return;
-            ajaxGet("/users", 
+            ajaxGet("/users",
                 function(data) {
                     dispatch({type: 'UPDATE_USERS', payload: data});
                 },
