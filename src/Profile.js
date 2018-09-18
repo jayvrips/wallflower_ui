@@ -52,16 +52,16 @@ class Profile extends React.Component {
       let height_id = this.state.height_id;
       let networth_id = this.state.networth_id;
 
-      if (!height_id)
-        height_id = profile.height_id
+      if (height_id === null)
+        height_id = profile.height
 
-      if (!height_id)
+      if (height_id === null)
         height_id = 'medium_5'
 
-      if (!networth_id)
-        networth_id = profile.networth_id
+      if (networth_id === null)
+        networth_id = profile.networth
 
-      if (!networth_id)
+      if (networth_id === null)
         networth_id = 'one_percent'
 
       let height_dropdown = dropdown(height_dict, height_id, this.onHeightChange.bind(this));
