@@ -14,6 +14,8 @@ import Profiles from './Profiles.js'
 
 
 function wallflowerReducer(state, action) {
+  //yeah, you prob thinking that we didnt pass in state just acion, but redux did that when dispatch was called
+  //(it calls this function and passes state)
     let initialState =  {
         users: {},
         profiles: {}
@@ -43,7 +45,15 @@ function wallflowerReducer(state, action) {
             profiles = Object.assign({}, state.profiles);
         //action is the stuff we passed in dispatch, so action.id is profile_id
             profiles[action.id] = action.profile_data;
-            return {...state, ...{profiles: profiles}}
+            return {...state, ...{profiles: profiles}};
+
+        case "DELETE_PROFILE":
+        //so to update the store you have to make a copy of whatecer it is your gonna mess with
+        //cuz u cant mess with stuff directly. in this case, we gonna mess with the profiles
+            profiles = Object.assign({}, state.profiles);
+            delete profiles[action.id];
+            return {...state, ...{profiles: profiles}};
+
 
 
         default:

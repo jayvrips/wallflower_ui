@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {fetchProfiles} from './common.js';
 import {dropdown} from './Widgets.js';
 import {ajaxPut} from './common.js';
+import {Redirect} from 'react-router';
 
 const height_dict = {
   "under_5": "Peter Dinklage",
@@ -26,7 +27,8 @@ class Profile extends React.Component {
 
       this.state= {
         height_id: null,
-        networth_id: null
+        networth_id: null,
+        redirect: null
       }
     }
 
@@ -42,10 +44,18 @@ class Profile extends React.Component {
       this.setState({networth_id: networth_id})
     }
 
+    onDeleteProfile(profile_id){
+       this.props.deleteProfile(profile_id);
+       this.setState({redirect : '/profiles'})
+    }
+
     render(){
       let self = this;
       if (Object.keys(this.props.profiles).length === 0)
         return <div/>;
+      if (this.state.redirect !== null)
+        return <Redirect to={this.state.redirect} />;
+
 
       const profile = this.props.profiles[this.props.match.params.id];
 
@@ -79,7 +89,8 @@ class Profile extends React.Component {
           <label htmlFor="networth">networth: </label>
           {networth_dropdown}
           </div>
-          <button onClick={()=> {self.props.updateProfile(self.state, profile.id)}}>Submit</button>
+          <button onClick={() => {self.props.updateProfile(self.state, profile.id)}}>Submit</button>
+          <button onClick={() => { self.onDeleteProfile(profile.id)}}>Delete Profile</button>
         </div>
       );
     }
@@ -91,19 +102,27 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    //camelcase this throughout
     get_profiles: (profiles) => {fetchProfiles(dispatch, profiles)},
 
+    //camelcase this throughout
+    updateProfile: (profile, profile_id) => {update_profile(dispatch, profile, profile_id)},
 
-    updateProfile: (profile, profile_id) => {update_profile(dispatch, profile, profile_id)}
+    deleteProfile: (profile_id) => {deleteProfile(dispatch, profile_id)}
   };
 }
 
+function deleteProfile(dispatch, profile_id){
+    dispatch({type: 'DELETE_PROFILE'  , id: profile_id});
+}
 function update_profile(dispatch, profile, profile_id){
     let request_data = {
         height: profile.height_id,
         networth: profile.networth_id
     }
-    ajaxPut("/profile/" + profile_id,
+    ajaxPut(
+           //these are the 4 arguments to ajaxPut; try moving success and error anonynous funcs outside and naming them
+           "/profile/" + profile_id,
             request_data,
             //rest call returns updated/new user
             //this anonymous function takes that data, and calls
