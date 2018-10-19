@@ -22,7 +22,7 @@ class Profiles extends React.Component {
             for (let profile in this.props.profiles){
                 profiles_list.push(
                   <div>
-                    <Link to={'/profile/' + this.props.profiles[profile].id}>{this.props.profiles[profile].height}</Link>
+                    <Link to={'/profile/' + this.props.profiles[profile].id}>{this.props.profiles[profile].user_fullname}</Link>
                   </div>
                 );
             }
