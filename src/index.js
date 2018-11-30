@@ -18,11 +18,13 @@ function wallflowerReducer(state, action) {
   //(it calls this function and passes state)
     let initialState =  {
         users: {},
-        profiles: {}
+        profiles: {},
+        profile_chats : {}
     };
 
     let users = null;
     let profiles = null;
+    let profile_chats = null;
     switch (action.type) {
         case "INITIALIZE":
             return initialState;
@@ -46,6 +48,10 @@ function wallflowerReducer(state, action) {
         //action is the stuff we passed in dispatch, so action.id is profile_id
             profiles[action.id] = action.profile_data;
             return {...state, ...{profiles: profiles}};
+
+        case "UPDATE_PROFILE_CHATS":
+            profile_chats = {profiles_chats: action.payload};
+            return {...state, ...profile_chats};
 
         case "DELETE_PROFILE":
         //so to update the store you have to make a copy of whatecer it is your gonna mess with

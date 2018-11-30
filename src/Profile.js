@@ -4,6 +4,7 @@ import {fetchProfiles} from './common.js';
 import {dropdown} from './Widgets.js';
 import {ajaxPut} from './common.js';
 import {Redirect} from 'react-router';
+import {fetchProfileChats} from './common.js';
 
 const height_dict = {
   "under_5": "Peter Dinklage",
@@ -49,6 +50,7 @@ class Profile extends React.Component {
        this.setState({redirect : '/profiles'})
     }
 
+
     render(){
       let self = this;
       if (Object.keys(this.props.profiles).length === 0)
@@ -58,6 +60,8 @@ class Profile extends React.Component {
 
 
       const profile = this.props.profiles[this.props.match.params.id];
+      console.log(profile)
+
 
       let height_id = this.state.height_id;
       let networth_id = this.state.networth_id;
@@ -74,8 +78,20 @@ class Profile extends React.Component {
       if (networth_id === null)
         networth_id = 'one_percent'
 
+
       let height_dropdown = dropdown(height_dict, height_id, this.onHeightChange.bind(this));
       let networth_dropdown = dropdown(networth_dict, networth_id, this.onNetworthChange.bind(this));
+
+      let chat_list = []
+      let chats = this.props.getProfileChats(profile.id)
+      console.log(chats)
+      for (let chat in chats){
+        chat_list.push(
+          <div>
+              <p>{chat.text}</p>
+          </div>
+        );
+      }
 
       return(
         <div className="col_container">
@@ -91,6 +107,9 @@ class Profile extends React.Component {
           </div>
           <button onClick={() => {self.props.updateProfile(self.state, profile.id)}}>Submit</button>
           <button onClick={() => { self.onDeleteProfile(profile.id)}}>Delete Profile</button>
+
+          <div>{chat_list}</div>
+
         </div>
       );
     }
@@ -108,7 +127,9 @@ const mapDispatchToProps = dispatch => {
     //camelcase this throughout
     updateProfile: (profile, profile_id) => {update_profile(dispatch, profile, profile_id)},
 
-    deleteProfile: (profile_id) => {deleteProfile(dispatch, profile_id)}
+    deleteProfile: (profile_id) => {deleteProfile(dispatch, profile_id)},
+
+    getProfileChats: (profile_id) => {fetchProfileChats(dispatch, profile_id)}
   };
 }
 
