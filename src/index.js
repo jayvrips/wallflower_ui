@@ -76,8 +76,8 @@ ReactDOM.render(
                 <Provider store={store}>
                   <Router >
                     <div>
-                      <Route exact path="/" component={User} />
-                      <Route exact path="/profiles" component={Profiles} />
+                      <Route exact path="/" component={Profiles} />
+                      <Route exact path="/users" component={User} />
                       <Route path='/profile/:id' component={Profile} />
                     </div>
                   </Router>

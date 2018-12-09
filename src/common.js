@@ -57,18 +57,3 @@ export function fetchProfiles(dispatch, profiles) {
           }
       );
   }
-
-  export function fetchProfileChats(dispath, profile_id) {
-        if (Object.keys(profile_id).length !== 0)
-            return;
-        ajaxGet("/profile/" + profile_id + "/chats",
-            function(data) {
-              console.log("HIiiiiii")
-              console.log(data)
-              dispath({type: 'UPDATES_PROFILE_CHATS',  payload: data});
-            },
-            function(xhr, textStatus, errorThrown) {
-                console.log("ERROR!!!!");
-            }
-        );
-  }
