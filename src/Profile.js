@@ -4,7 +4,6 @@ import {fetchProfiles} from './common.js';
 import {dropdown} from './Widgets.js';
 import {ajaxPut, ajaxGet} from './common.js';
 import {Redirect} from 'react-router';
-import {fetchProfileChats} from './common.js';
 
 const height_dict = {
   "under_5": "Peter Dinklage",
@@ -29,7 +28,8 @@ class Profile extends React.Component {
       this.state= {
         profile: null,
         redirect: null,
-        profile_data: {}
+        profile_data: {},
+        chat_list: {}
       }
     }
 
@@ -42,6 +42,7 @@ class Profile extends React.Component {
         getProfile(this, this.props.profiles, this.props.match.params.id);
 
       //TODO
+        getChatList(this, this.props.match.params.id);
       //2. POPULATE CHATS, SEE 2 ABOVE, ROUTE SHOULD BE CHATS/ID_OF_SENDER
       //to get chats: make a rest call from a function defined below - note: the func
       //should not be defined in mapDispatchToProps because it will not be using dispath &
@@ -91,20 +92,22 @@ class Profile extends React.Component {
       if (networth_id === null)
         networth_id = 'one_percent'
 
-
       let height_dropdown = dropdown(height_dict, height_id, this.onHeightChange.bind(this));
       let networth_dropdown = dropdown(networth_dict, networth_id, this.onNetworthChange.bind(this));
 
-      // let chat_list = []
-      //
-      // console.log(chats)
-      // for (let chat in chats){
-      //   chat_list.push(
-      //     <div>
-      //         <p>{chat.text}</p>
-      //     </div>
-      //   );
-      // }
+      let chat_list_ui = []
+
+      var boo = Object(this.state.chat_list)
+      console.log(boo);
+      for (let b in boo){
+        console.log(boo[b].text);
+      }
+
+
+
+
+
+
 
 
       return(
@@ -124,6 +127,12 @@ class Profile extends React.Component {
 
           <button onClick={() => {self.props.updateProfile(this.state.profile, this.state.profile.id)}}>Submit</button>
           <button onClick={() => { self.onDeleteProfile(this.state.profile.id)}}>Delete Profile</button>
+
+          <div>
+            <p>My Matches/Chats</p>
+            {chat_list_ui}
+          </div>
+
 
         </div>
       );
@@ -173,7 +182,6 @@ function getProfile(self, profiles, profile_id){
             "/profiles/" + profile_id,
 
             function(response_data){
-              console.log("this was called")
               self.setState({profile: response_data});
             },
 
@@ -181,6 +189,25 @@ function getProfile(self, profiles, profile_id){
                 console.log("ERROR!!!!");
             }
     );
+}
+function getChatList(self, profile_id){
+    ajaxGet(
+            "/chats/" + profile_id,
+
+            function(response_data){
+              self.setState({chat_list: response_data})
+            },
+
+            function(xhr, textStatus, errorThrown){
+              console.log("ERROR!!!!!!!!!");
+            }
+    );
+
+    //2. POPULATE CHATS, SEE 2 ABOVE, ROUTE SHOULD BE CHATS/ID_OF_SENDER
+    //to get chats: make a rest call from a function defined below - note: the func
+    //should not be defined in mapDispatchToProps because it will not be using dispath &
+    //instead of putting the return data in the store it will be putting it in this
+    //components state
 }
 function updateProfile(dispatch, profile, profile_id){
     let request_data = {
