@@ -4,6 +4,7 @@ import {fetchProfiles} from './common.js';
 import {dropdown} from './Widgets.js';
 import {ajaxPut, ajaxGet} from './common.js';
 import {Redirect} from 'react-router';
+import {Link} from "react-router-dom";
 
 const height_dict = {
   "under_5": "Peter Dinklage",
@@ -97,18 +98,17 @@ class Profile extends React.Component {
 
       let chat_list_ui = []
 
-      var boo = Object(this.state.chat_list)
-      console.log(boo);
-      for (let b in boo){
-        console.log(boo[b].text);
+      let chats = Object(this.state.chat_list)
+      console.log(chats)
+      let chats_list = []
+      for (let chat in chats){
+         chats_list.push(
+           <div>
+              <Link to={'/chats' + chats[chat].recipient_id}>{chats[chat].recipient_fullname}</Link>
+           </div>
+
+         )
       }
-
-
-
-
-
-
-
 
       return(
         <div className="col_container">
@@ -130,7 +130,7 @@ class Profile extends React.Component {
 
           <div>
             <p>My Matches/Chats</p>
-            {chat_list_ui}
+            {chats_list}
           </div>
 
 
