@@ -10,6 +10,7 @@ import registerServiceWorker from './registerServiceWorker';
 import User from './User.js';
 import Profile from './Profile.js';
 import Profiles from './Profiles.js'
+import ChatHistory from './ChatHistory.js'
 
 
 
@@ -72,6 +73,7 @@ function wallflowerReducer(state, action) {
 
 const store = createStore(wallflowerReducer);
 
+
 ReactDOM.render(
                 <Provider store={store}>
                   <Router >
@@ -79,6 +81,7 @@ ReactDOM.render(
                       <Route exact path="/" component={Profiles} />
                       <Route exact path="/users" component={User} />
                       <Route path='/profile/:id' component={Profile} />
+                      <Route path='/chathistory/:id/:recipient_id' component={ChatHistory} />
                     </div>
                   </Router>
                 </Provider>,

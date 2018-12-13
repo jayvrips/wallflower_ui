@@ -96,15 +96,18 @@ class Profile extends React.Component {
       let height_dropdown = dropdown(height_dict, height_id, this.onHeightChange.bind(this));
       let networth_dropdown = dropdown(networth_dict, networth_id, this.onNetworthChange.bind(this));
 
-      let chat_list_ui = []
 
       let chats = Object(this.state.chat_list)
-      console.log(chats)
+      let one = Object(this.state.chat_list)[1]
+
+      console.log("*****")
+      console.log(one)
+      // console.log(chats)
       let chats_list = []
       for (let chat in chats){
          chats_list.push(
            <div>
-              <Link to={'/chats' + chats[chat].recipient_id}>{chats[chat].recipient_fullname}</Link>
+              <Link to={'/chathistory/' + this.state.profile.id + '/' + chats[chat].recipient_id}>{chats[chat].recipient_fullname}</Link>
            </div>
 
          )
