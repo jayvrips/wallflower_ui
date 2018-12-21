@@ -40,10 +40,10 @@ class Profile extends React.Component {
       //once:, you should make a regular rest call from compendnt did mount and store the return data in state
 
       //1. LOAD PROFILE USING PROPS
-        getProfile(this, this.props.profiles, this.props.match.params.id);
+        this.getProfile(this.props.profiles, this.props.match.params.id);
 
       //TODO
-        getChatList(this, this.props.match.params.id);
+        this.getChatList(this.props.match.params.id);
       //2. POPULATE CHATS, SEE 2 ABOVE, ROUTE SHOULD BE CHATS/ID_OF_SENDER
       //to get chats: make a rest call from a function defined below - note: the func
       //should not be defined in mapDispatchToProps because it will not be using dispath &
@@ -72,6 +72,44 @@ class Profile extends React.Component {
     onDeleteProfile(profile_id){
        this.props.deleteProfile(profile_id);
        this.setState({redirect : '/profiles'})
+    }
+
+    getProfile(profiles, profile_id){
+        if (profile_id in profiles) {
+           this.setState({profile: profiles[profile_id]});
+           return;
+        }
+
+        ajaxGet(
+                "/profiles/" + profile_id,
+
+                (response_data) => {
+                  this.setState({profile: response_data});
+                },
+
+                (xhr, textStatus, errorThrown) => {
+                    console.log("ERROR!!!!");
+                }
+        );
+    }
+    getChatList(profile_id){
+        ajaxGet(
+                "/chats/" + profile_id,
+
+                (response_data) => {
+                  this.setState({chat_list: response_data})
+                },
+
+                (xhr, textStatus, errorThrown) => {
+                  console.log("ERROR!!!!!!!!!");
+                }
+        );
+
+        //2. POPULATE CHATS, SEE 2 ABOVE, ROUTE SHOULD BE CHATS/ID_OF_SENDER
+        //to get chats: make a rest call from a function defined below - note: the func
+        //should not be defined in mapDispatchToProps because it will not be using dispath &
+        //instead of putting the return data in the store it will be putting it in this
+        //components state
     }
 
 
@@ -175,43 +213,7 @@ function deleteProfile(dispatch, profile_id){
 
     //SHOULDNT THIS HAVE AN AJAX CALL AS WELL TO DELETE FROM DB?
 }
-function getProfile(self, profiles, profile_id){
-    if (profile_id in profiles) {
-       self.setState({profile: profiles[profile_id]});
-       return;
-    }
 
-    ajaxGet(
-            "/profiles/" + profile_id,
-
-            function(response_data){
-              self.setState({profile: response_data});
-            },
-
-            function(xhr, textStatus, errorThrown) {
-                console.log("ERROR!!!!");
-            }
-    );
-}
-function getChatList(self, profile_id){
-    ajaxGet(
-            "/chats/" + profile_id,
-
-            function(response_data){
-              self.setState({chat_list: response_data})
-            },
-
-            function(xhr, textStatus, errorThrown){
-              console.log("ERROR!!!!!!!!!");
-            }
-    );
-
-    //2. POPULATE CHATS, SEE 2 ABOVE, ROUTE SHOULD BE CHATS/ID_OF_SENDER
-    //to get chats: make a rest call from a function defined below - note: the func
-    //should not be defined in mapDispatchToProps because it will not be using dispath &
-    //instead of putting the return data in the store it will be putting it in this
-    //components state
-}
 function updateProfile(dispatch, profile, profile_id){
     let request_data = {
         height: profile.height,
