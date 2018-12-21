@@ -10,6 +10,10 @@ class Profiles extends React.Component {
     }
 
     componentDidMount() {
+        // create login component - use Flask features
+        // show self on profiles list distinct from others
+        // dont show edit stuff on profile pg if not you
+
         this.props.get_profiles(this.props.profiles);
     }
 
