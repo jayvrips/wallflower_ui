@@ -22,9 +22,29 @@ class ChatHistory extends React.Component{
       console.log("^^^^")
       console.log(this.state.chat_history)
 
+      let messages_list = []
+      let messages = this.state.chat_history
+
+      for(let msg in messages){
+          messages_list.push(
+            <div>
+              <p>{messages[msg].recipient_fullname} - {messages[msg].text}</p>
+            </div>
+          )
+      }
+
       return(
-        <p>Hi</p>
-      )
+        <div>
+          <div>
+            <p>Chat History</p>
+          </div>
+
+          <div>
+            {messages_list}
+          </div>
+
+        </div>
+      );
     }
 }
 
