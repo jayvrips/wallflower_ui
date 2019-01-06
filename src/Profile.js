@@ -2,7 +2,7 @@ import React from "react";
 import {connect} from 'react-redux';
 import {fetchProfiles} from './common.js';
 import {dropdown} from './Widgets.js';
-import {ajaxPut, ajaxGet} from './common.js';
+import {ajaxPut, ajaxGet, ajaxPost} from './common.js';
 import {Redirect} from 'react-router';
 import {Link} from "react-router-dom";
 
@@ -80,6 +80,24 @@ class Profile extends React.Component {
            return;
         }
 
+        let request_data = {
+            name: 'cyp',
+            password: 'password1'
+        };
+
+        ajaxPost(
+                "/login",
+                request_data,
+
+                (response_data) => {
+                  console.log("I did this!!!!!!");
+                },
+
+                (xhr, textStatus, errorThrown) => {
+                  console.log("ERRORRR!!!!");
+                }
+        );
+
         ajaxGet(
                 "/profiles/" + profile_id,
 
@@ -153,6 +171,10 @@ class Profile extends React.Component {
 
       return(
         <div className="col_container">
+
+          <div>
+            <Link to={'/users'}>Users page</Link>
+          </div>
 
           <div><p>{this.state.profile.id}</p></div>
 
