@@ -11,6 +11,7 @@ import User from './User.js';
 import Profile from './Profile.js';
 import Profiles from './Profiles.js'
 import ChatHistory from './ChatHistory.js'
+import Layout from './Layout.js'
 
 
 
@@ -20,12 +21,14 @@ function wallflowerReducer(state, action) {
     let initialState =  {
         users: {},
         profiles: {},
-        profile_chats : {}
+        profile_chats : {},
+        profile_likes: {}
     };
 
     let users = null;
     let profiles = null;
     let profile_chats = null;
+    let profile_likes = null;
     switch (action.type) {
         case "INITIALIZE":
             return initialState;
@@ -54,6 +57,10 @@ function wallflowerReducer(state, action) {
             profile_chats = {profiles_chats: action.payload};
             return {...state, ...profile_chats};
 
+        case "UPDATE_PROFILE_LIKES":
+            profile_likes = {profile_likes: action.payload};
+            return {...state, ...profile_likes};
+
         case "DELETE_PROFILE":
         //so to update the store you have to make a copy of whatecer it is your gonna mess with
         //cuz u cant mess with stuff directly. in this case, we gonna mess with the profiles
@@ -78,6 +85,7 @@ ReactDOM.render(
                 <Provider store={store}>
                   <Router >
                     <div>
+                      <Layout />
                       <Route exact path="/" component={Profiles} />
                       <Route exact path="/users" component={User} />
                       <Route path='/profile/:id' component={Profile} />

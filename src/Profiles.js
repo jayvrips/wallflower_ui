@@ -1,6 +1,6 @@
 import React from "react";
 import {connect} from 'react-redux';
-import {ajaxGet, ajaxPost, ajaxPut, fetchProfiles} from './common.js';
+import {fetchProfiles} from './common.js';
 import {Link} from "react-router-dom";
 
 
@@ -11,10 +11,8 @@ class Profiles extends React.Component {
 
     componentDidMount() {
         // create likes_notification component. Use case:
-        //1. Add notifications table to db
-        //2. Add seed function for notifications
-        //3. Add get route for notifications
-        //4. Add component for notifications that appears on every page (need layout component as well)
+        //-DID 5 -7 BUT ONLY FOR PROFILE PAGE, NEED SESSIONS FOR IT TO APPEAR TROUGHOUT SITE
+        //ON NAV PAGE
         //5. in notifications comp, mapStateToProps (to load them from redux store (see render in index.js))
         //6. add variable and case statement in redux store
         //7. write method for gettings notifications (checks state then makes ajax call if needed)

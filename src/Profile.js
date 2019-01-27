@@ -30,7 +30,8 @@ class Profile extends React.Component {
         profile: null,
         redirect: null,
         profile_data: {},
-        chat_list: {}
+        chat_list: {},
+        likes_list: {}
       }
     }
 
@@ -49,6 +50,8 @@ class Profile extends React.Component {
       //should not be defined in mapDispatchToProps because it will not be using dispath &
       //instead of putting the return data in the store it will be putting it in this
       //components state
+
+        this.props.get_profile_likes(this.props.profile_likes,this.props.match.params.id);
 
 
       // this.props.get_profiles(this.props.profiles);
@@ -143,8 +146,8 @@ class Profile extends React.Component {
       let chats = Object(this.state.chat_list)
       let one = Object(this.state.chat_list)[1]
 
-      console.log("*****")
-      console.log(one)
+      // console.log("*****")
+      // console.log(one)
       // console.log(chats)
       let chats_list = []
       for (let chat in chats){
@@ -156,8 +159,28 @@ class Profile extends React.Component {
          )
       }
 
+
+      let likes_list = [];
+      console.log('************')
+      console.log(this.props.profile_likes)
+      if (Object.keys(this.props.profile_likes).length === 0)
+        likes_list = (<div>no profile likes</div>)
+      else{
+        for (let like in this.props.profile_likes){
+          likes_list.push(
+            <div>
+              <p>{this.props.profile_likes[like].sender_fullname}</p>
+            </div>
+          );
+        }
+      }
+
+
       return(
         <div className="col_container">
+
+          <div><p>Likes List(notification)</p></div>
+          <div>{likes_list}</div>
 
           <div>
             <Link to={'/users'}>Users page</Link>
@@ -190,7 +213,7 @@ class Profile extends React.Component {
 }
 
 const mapStateToProps = state => {
-   return { profiles: state.profiles , profile_chats: state.profile_chats};
+   return { profiles: state.profiles , profile_chats: state.profile_chats, profile_likes: state.profile_likes};
 
 
 }
@@ -212,9 +235,32 @@ const mapDispatchToProps = dispatch => {
     deleteProfile: (profile_id) => {deleteProfile(dispatch, profile_id)},
 
     //camelcase this throughout AND move this to a different page
-    get_profiles: (profiles) => {fetchProfiles(dispatch, profiles)}
+    get_profiles: (profiles) => {fetchProfiles(dispatch, profiles)},
+
+    get_profile_likes: (profile_likes, profile_id) => {getProfileLikes(dispatch, profile_likes, profile_id)}
 
   };
+}
+
+function getProfileLikes(dispatch, profile_likes, profile_id){
+  console.log('got in here')
+  console.log(profile_likes)
+  console.log(profile_id)
+  if (Object.keys(profile_likes).length !==0)
+    return;
+  ajaxGet(
+          "/likes/" + profile_id,
+
+          function(data) {
+            console.log('?????????????????')
+            console.log(data)
+            dispatch({type: 'UPDATE_PROFILE_LIKES', payload: data});
+          },
+
+          (xhr, textStatus, errorThrown) => {
+            console.log("ERROR!!!!!!!!!");
+          }
+  );
 }
 
 function deleteProfile(dispatch, profile_id){
